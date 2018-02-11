@@ -1,0 +1,44 @@
+import org.packtrack.utils.purolator.Track
+
+task ProjectName {
+    doLast {
+        logger.lifecycle("Project Name: {}", project.name)
+    }
+}
+
+task TrackOneShipment {
+    doLast {
+        Track track = new Track(project.trackingNumber)
+        track.getStatus()
+        track.printFullStatus()
+    }
+}
+
+task TrackShipmentsInTextFile {
+    doLast {
+        List<String> tracked = []
+        tracked.add("BOL_MNFST_NUM")
+        tracked.add("SHIPMENT_PIN")
+
+        File file = new File(sourceFilename)
+        file.eachLine { String line ->
+            def match = (line =~ /(?:.*?\t){81}(.*?)\t(.*?)\t/)
+            if (match) {
+                def packages = [match[0][1].toString(), match[0][2].toString()]
+                logger.debug("Found packages: {}", packages)
+                packages.each { item -> 
+                    if (!tracked.contains(item)) {
+                        logger.lifecycle("Package: {}", item)
+                        Track track = new Track(item)
+                        track.getStatus()
+                        track.printShortStatus()
+                        tracked.add(item)
+                    }
+                    else {
+                        logger.debug("Package: {} already tracked.\n", item)
+                    }
+                }
+            }
+        }
+    }
+}
