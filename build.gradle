@@ -1,10 +1,5 @@
 import org.packtrack.utils.purolator.Track
-
-task ProjectName {
-    doLast {
-        logger.lifecycle("Project Name: {}", project.name)
-    }
-}
+import org.packtrack.utils.pdf.ReadPdfText
 
 task TrackOneShipment {
     doLast {
@@ -39,6 +34,23 @@ task TrackShipmentsInTextFile {
                     }
                 }
             }
+        }
+    }
+}
+
+task ReadPdfInvoice {
+    doLast {
+        ReadPdfText pdf = new ReadPdfText(project.sourcePfdFilename)
+        logger.lifecycle("Text in {}:\n", project.sourcePfdFilename)
+        logger.lifecycle(pdf.text)
+    }
+}
+
+task GetTrackingNumbersFromInvoice {
+    doLast {
+        ReadPdfText pdf = new ReadPdfText(project.sourcePfdFilename)
+        pdf.getTrackingNumbers().each { shipment ->
+            logger.lifecycle("SHIPMENT: {}", shipment)
         }
     }
 }
