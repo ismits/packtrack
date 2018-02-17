@@ -6,4 +6,5 @@ repositories {
 dependencies { 
 	compile ("commons-lang:commons-lang:2.6")
     compile ("org.codehaus.groovy.modules.http-builder:http-builder:0.7.2")
+    compile ("org.apache.pdfbox:pdfbox:2.0.8")
 }
