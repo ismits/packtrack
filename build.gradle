@@ -48,9 +48,10 @@ task ReadPdfInvoice {
 
 task GetTrackingNumbersFromInvoice {
     doLast {
+        Integer c = 0
         ReadPdfText pdf = new ReadPdfText(project.sourcePfdFilename)
         pdf.getTrackingNumbers().each { shipment ->
-            logger.lifecycle("SHIPMENT: {}", shipment)
+            logger.lifecycle("SHIPMENT: {}: {}", ++c, shipment)
         }
     }
 }

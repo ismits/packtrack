@@ -41,9 +41,11 @@ class ReadPdfText {
 		pdfText.eachLine { line -> 
 			def matcher = (line =~ /\b(\d{12})\b/)
 			if (matcher) {
-				logger.lifecycle(line)
-				logger.lifecycle("**************  Found tracking number: {}", matcher[0][0])
-				trackingNumbers += matcher[0][1]
+				logger.debug(line)
+				logger.debug("**************  Found tracking number: {}", matcher[0][0])
+				if (!trackingNumbers.contains(matcher[0][1])) {
+					trackingNumbers += matcher[0][1]
+				}
 			}
 		}
 		return trackingNumbers
