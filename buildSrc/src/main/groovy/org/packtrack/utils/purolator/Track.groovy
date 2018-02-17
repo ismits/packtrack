@@ -74,7 +74,7 @@ class Track {
 					if (match) {
 						ShipmentHistoryEvent event = new ShipmentHistoryEvent(match[0][1], match[0][2], match[0][3], match[0][4])
 						shipment.history.events.add(event)
-						logger.debug("Found Event: \n{}", event.toString())
+						logger.lifecycle("Found Event: \n{}", event.toString())
 					}
 				}
 			}
