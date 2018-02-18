@@ -1,15 +1,24 @@
-import org.packtrack.utils.purolator.Track
+import org.packtrack.utils.purolator.PurolatorTrack
+import org.packtrack.utils.fedex.FedexTrack
 import org.packtrack.utils.pdf.ReadPdfText
 
-task TrackOneShipment {
+task TrackOnePurolatorShipment {
     doLast {
-        Track track = new Track(project.trackingNumber)
+        PurolatorTrack track = new PurolatorTrack(project.purolatorTrackingNumber)
         track.getStatus()
         track.printFullStatus()
     }
 }
 
-task TrackShipmentsInTextFile {
+task TrackOneFedexShipment {
+    doLast {
+        FedexTrack track = new FedexTrack(project.fedexTrackingNumber, fedexTrackOuputDir)
+        track.getStatus()
+        // track.printFullStatus()
+    }
+}
+
+task TrackPurolatorShipmentsInTextFile {
     doLast {
         List<String> tracked = []
         tracked.add("BOL_MNFST_NUM")
@@ -24,7 +33,7 @@ task TrackShipmentsInTextFile {
                 packages.each { item -> 
                     if (!tracked.contains(item)) {
                         logger.lifecycle("Package: {}", item)
-                        Track track = new Track(item)
+                        PurolatorTrack track = new PurolatorTrack(item)
                         track.getStatus()
                         track.printShortStatus()
                         tracked.add(item)
@@ -52,6 +61,18 @@ task GetTrackingNumbersFromInvoice {
         ReadPdfText pdf = new ReadPdfText(project.sourcePfdFilename)
         pdf.getTrackingNumbers().each { shipment ->
             logger.lifecycle("SHIPMENT: {}: {}", ++c, shipment)
+        }
+    }
+}
+
+task TrackFedexShipmentsInPdfFile {
+    doLast {
+        Integer c = 0
+        ReadPdfText pdf = new ReadPdfText(project.sourcePfdFilename)
+        pdf.getTrackingNumbers().each { shipment ->
+            logger.lifecycle("\nFOUND SHIPMENT: {}: {}", ++c, shipment)
+            FedexTrack track = new FedexTrack(shipment, fedexTrackOuputDir)
+            track.getStatus()
         }
     }
 }

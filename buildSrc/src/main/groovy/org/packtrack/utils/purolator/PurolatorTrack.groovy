@@ -17,12 +17,12 @@ import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.HTML
 import org.apache.http.impl.client.LaxRedirectStrategy
 
-class Track {
+class PurolatorTrack {
 	private Logger logger
 	private String trackingId
 	private Shipment shipment
 
-	public Track(String trackingId) {
+	public PurolatorTrack(String trackingId) {
 		logger = LoggerFactory.getLogger('org.packtrack.utils.purolator')
 		this.trackingId = trackingId
 		shipment = new Shipment()
